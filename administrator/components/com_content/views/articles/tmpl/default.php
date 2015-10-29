@@ -23,6 +23,7 @@ $listDirn	= $this->escape($this->state->get('list.direction'));
 $archived	= $this->state->get('filter.published') == 2 ? true : false;
 $trashed	= $this->state->get('filter.published') == -2 ? true : false;
 $saveOrder	= $listOrder == 'a.ordering';
+$columns	= 10;
 
 if ($saveOrder)
 {
@@ -30,27 +31,7 @@ if ($saveOrder)
 	JHtml::_('sortablelist.sortable', 'articleList', 'adminForm', strtolower($listDirn), $saveOrderingUrl);
 }
 
-$sortFields = $this->getSortFields();
 $assoc		= JLanguageAssociations::isEnabled();
-
-JFactory::getDocument()->addScriptDeclaration('
-	Joomla.orderTable = function()
-	{
-		table = document.getElementById("sortTable");
-		direction = document.getElementById("directionTable");
-		order = table.options[table.selectedIndex].value;
-		if (order != "' . $listOrder . '")
-		{
-			dirn = "asc";
-		}
-		else
-		{
-			dirn = direction.options[direction.selectedIndex].value;
-		}
-		Joomla.tableOrdering(order, dirn, "");
-	};
-');
-
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option=com_content&view=articles'); ?>" method="post" name="adminForm" id="adminForm">
@@ -90,6 +71,7 @@ JFactory::getDocument()->addScriptDeclaration('
 							<?php echo JHtml::_('searchtools.sort',  'JGRID_HEADING_ACCESS', 'a.access', $listDirn, $listOrder); ?>
 						</th>
 					<?php if ($assoc) : ?>
+						<?php $columns++; ?>
 						<th width="5%" class="nowrap hidden-phone">
 							<?php echo JHtml::_('searchtools.sort', 'COM_CONTENT_HEADING_ASSOCIATION', 'association', $listDirn, $listOrder); ?>
 						</th>
@@ -111,6 +93,12 @@ JFactory::getDocument()->addScriptDeclaration('
 						</th>
 					</tr>
 				</thead>
+				<tfoot>
+					<tr>
+						<td colspan="<?php echo $columns; ?>">
+						</td>
+					</tr>
+				</tfoot>
 				<tbody>
 				<?php foreach ($this->items as $i => $item) :
 					$item->max_ordering = 0;
@@ -172,7 +160,7 @@ JFactory::getDocument()->addScriptDeclaration('
 									<?php $language = $item->language_title ? $this->escape($item->language_title) : JText::_('JUNDEFINED'); ?>
 								<?php endif;?>
 								<?php if ($canEdit || $canEditOwn) : ?>
-									<a href="<?php echo JRoute::_('index.php?option=com_content&task=article.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
+									<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_content&task=article.edit&id=' . $item->id); ?>" title="<?php echo JText::_('JACTION_EDIT'); ?>">
 										<?php echo $this->escape($item->title); ?></a>
 								<?php else : ?>
 									<span title="<?php echo JText::sprintf('JFIELD_ALIAS_LABEL', $this->escape($item->alias)); ?>"><?php echo $this->escape($item->title); ?></span>
@@ -197,11 +185,11 @@ JFactory::getDocument()->addScriptDeclaration('
 						<?php endif;?>
 						<td class="small hidden-phone">
 							<?php if ($item->created_by_alias) : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . (int) $item->created_by); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
+								<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . (int) $item->created_by); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
 								<?php echo $this->escape($item->author_name); ?></a>
 								<p class="smallsub"> <?php echo JText::sprintf('JGLOBAL_LIST_ALIAS', $this->escape($item->created_by_alias)); ?></p>
 							<?php else : ?>
-								<a href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . (int) $item->created_by); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
+								<a class="hasTooltip" href="<?php echo JRoute::_('index.php?option=com_users&task=user.edit&id=' . (int) $item->created_by); ?>" title="<?php echo JText::_('JAUTHOR'); ?>">
 								<?php echo $this->escape($item->author_name); ?></a>
 							<?php endif; ?>
 						</td>
