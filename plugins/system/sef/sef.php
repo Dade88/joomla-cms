@@ -6,6 +6,7 @@
  * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
+
 defined('_JEXEC') or die;
 
 /**
@@ -37,14 +38,14 @@ class PlgSystemSef extends JPlugin
 		$uri     = JUri::getInstance();
 		$domain  = $this->params->get('domain');
 
-		if ($domain === null || $domain === '')
+		if ($domain === false || $domain === '')
 		{
 			$domain = $uri->toString(array('scheme', 'host', 'port'));
 		}
 
 		$link = $domain . JRoute::_('index.php?' . http_build_query($router->getVars()), false);
 
-		if ($uri->toString() !== $link)
+		if (rawurldecode($uri->toString()) !== $link)
 		{
 			$doc->addHeadLink(htmlspecialchars($link), 'canonical');
 		}

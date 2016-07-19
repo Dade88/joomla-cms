@@ -7,10 +7,9 @@
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
-defined('_JEXEC') or die;
+defined('JPATH_BASE') or die;
 
 ?>
-<div class="categories-list<?php echo $displayData->pageclass_sfx;?>">
 <?php if ($displayData->params->get('show_page_heading')) : ?>
 <h1>
 	<?php echo $displayData->escape($displayData->params->get('page_heading')); ?>
